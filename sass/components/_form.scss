@@ -1,0 +1,116 @@
+.form {
+  &__group:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+
+  &__input {
+    font-size: 1.5rem;
+    // inputs don't inherit font properties by default, so instead of setting it to Lato again, we force inherit it
+    font-family: inherit;
+    color: inherit;
+    padding: 1.5rem 2rem;
+    border-radius: 2px;
+    background-color: rgba($color-white, 0.5);
+    border: none;
+    // introduce a transparent border so that once the element is focused, a new border isn't added which would cause other elements to move
+    border-bottom: 3px solid transparent;
+    width: 90%;
+    display: block;
+    transition: all 0.3s;
+
+    @include respond(tab-port) {
+      width: 100%;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 1rem 2rem rgba($color-black, 0.1);
+      border-bottom: 3px solid $color-primary;
+    }
+
+    // when the element is focused, and its input is invalid
+    &:focus:invalid {
+      border-bottom: 3px solid $color-secondary-dark;
+    }
+
+    &::-webkit-input-placeholder {
+      color: $color-grey-dark-2;
+    }
+  }
+
+  &__label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-left: 2rem;
+    margin-top: 0.7rem;
+    display: block;
+    transition: all 0.3s;
+  }
+
+  // + represents an immediate sibling (html element on the same level immediately after the first one)
+  // if the sibling isn't immediate, the ~ selector should be used in its place instead
+  // the way it works: when the placeholder text is shown on the input element, apply styles to the sibling label element as defined
+  &__input:placeholder-shown + &__label {
+    // even though visibility set to hidden below will do the job, it cannot be animated, hence opacity is also used
+    opacity: 0;
+    // visibility will remove the element entirely
+    visibility: hidden;
+    transform: translateY(-4rem);
+  }
+
+  &__radio-group {
+    width: 49%;
+    display: inline-block;
+
+    @include respond(tab-port) {
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__radio-input {
+    display: none;
+  }
+
+  &__radio-label {
+    font-size: $default-font-size;
+    cursor: pointer;
+    position: relative;
+    padding-left: 4.5rem;
+  }
+
+  &__radio-button {
+    height: 3rem;
+    width: 3rem;
+    border: 5px solid $color-primary;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: -0.4rem;
+
+    &::after {
+      // in order to display a pseudo element, we always need to set the content and display properties
+      content: "";
+      display: block;
+      height: 1.3rem;
+      width: 1.3rem;
+      border-radius: 50%;
+      // in order to center the circle, we will use absolute positioning again
+      // the parent position is set to absolute as well, but it's ok, it doesn't need to be set to relative, it only needs to be specified
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: $color-primary;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+  }
+
+  // when radio input is checked, select the sibling element with radio-label class, and then inside it select the ::after pseudo element of the element with radio-button class
+  // + instead of ~ would have also worked
+  &__radio-input:checked ~ &__radio-label &__radio-button::after {
+    opacity: 1;
+  }
+}

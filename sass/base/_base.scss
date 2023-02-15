@@ -1,0 +1,55 @@
+/* CSS reset */
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  /* box-sizing is not inherited by elements by default, this way we force it to inherit border-box which was set in body */
+  box-sizing: inherit;
+}
+
+/* setting new root font size (default value set by browser is usually 16) */
+html {
+  /* value set to 10px because it makes it easier to calculate rem values */
+  /* font-size: 10px; */
+
+  /* it's event better to set the font size in percentages (100% being 16px, and 62.5% being 10px) so that when
+   a user with poor eyesight changes the font size via browser, these changes actually take effect on our website,
+  it defines what 1rem is */
+  font-size: 62.5%;
+
+  /* Media queries should be written from biggest to smallest screens (for desktop-first approach), as they are checking for max-size condition,
+    so a single screen width can happen to satisfy multiple of these conditions, but as we want to make sure that styles of the query with the smallest satisfied condition
+    apply and override the larger queries, it needs to be placed lower than others to satisfy the CSS cascade system
+  */
+
+  @include respond(big-desktop) {
+    font-size: 75%; //1rem is now 12px, as it is 55% of the default browser root font size of 16px
+  }
+
+  @include respond(tab-land) {
+    font-size: 56.25%; //1rem is now 9px, as it is 56.25% of the default browser root font size of 16px
+  }
+
+  @include respond(tab-port) {
+    font-size: 50%; //1rem is now 8px, as it is 50% of the default browser root font size of 16px
+  }
+
+  // phone media query is unnecesary as it would use the same font size as tab-port
+}
+
+body {
+  /* border-box makes it so that specified width and height properties also take padding and borders into account for size,
+  instead of them being added to width and height values for total element size */
+  box-sizing: border-box;
+  padding: 3rem;
+
+  @include respond(tab-port) {
+    padding: 0;
+  }
+}
+
+::selection {
+  background-color: $color-primary;
+  color: $color-white;
+}

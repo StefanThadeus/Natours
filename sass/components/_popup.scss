@@ -1,0 +1,129 @@
+.popup {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba($color-black, 0.8);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+
+  @supports (-webkit-backdrop-filter: blur(10px)) or
+    (backdrop-filter: blur(10px)) {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background-color: rgba($color-black, 0.3);
+  }
+
+  &__content {
+    @include absCenter;
+    width: 75%;
+    background-color: $color-white;
+    box-shadow: 0 2rem 4rem rgba($color-black, 0.2);
+    border-radius: 3px;
+    // pretend that the contents are a table even though the markup isn't
+    display: table;
+    // to hide images from flowing out over the border radius of the container
+    overflow: hidden;
+    opacity: 0;
+    // translate is repeated again, even though it already exist in the absCenter mixin
+    // an element may have only one transform property so this is necessary in order to scale the element at the center,
+    // and not just override the translate property with the scale
+    transform: translate(-50%, -50%) scale(0.25);
+    // delay of 0.2s, so that the black background gets to load a little bit before the actual popup scaels up
+    transition: all 0.5s 0.2s;
+
+    @include respond(tab-land) {
+      display: inline-block;
+      width: 85%;
+    }
+  }
+
+  &__left {
+    width: 33.333333%;
+    display: table-cell;
+
+    @include respond(tab-land) {
+      display: grid;
+      grid-template-columns: auto auto;
+      width: 100%;
+    }
+  }
+
+  &__right {
+    width: 66.666667%;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 3rem 5rem;
+
+    @include respond(tab-land) {
+      display: inline-block;
+      width: 100%;
+    }
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+
+    @include respond(tab-land) {
+      height: -webkit-fill-available;
+      height: -moz-fill-available;
+    }
+  }
+
+  &__text {
+    font-size: 1.4rem;
+    margin-bottom: 4rem;
+
+    -moz-column-count: 2;
+    -moz-column-gap: 4rem;
+    -moz-column-rule: 1px solid $color-grey-light-2;
+
+    // separating text into columns
+    column-count: 2;
+    column-gap: 4rem;
+    // add vertical line separator between columns
+    column-rule: 1px solid $color-grey-light-2;
+
+    // automatically figure out where to put hyphens (in order to work properly, language should be set in the html tag as in <html lang="en">)
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+
+  // OPEN STATES
+
+  // pseudo class applies when the element becomes a target (from a clicked anchor, for example, or whenever the url changes and contains the target)
+  &:target {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &:target &__content {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  &__close {
+    &:link,
+    &:visited {
+      color: $color-grey-dark-1;
+      position: absolute;
+      top: 2.5rem;
+      right: 2.5rem;
+      font-size: 3rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+      line-height: 1;
+    }
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+}

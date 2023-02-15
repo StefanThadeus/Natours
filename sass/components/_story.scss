@@ -1,0 +1,93 @@
+.story {
+  width: 75%;
+  margin: 0 auto;
+  box-shadow: 0 3rem 6rem rgba($color-black, 0.1);
+  background-color: rgba($color-white, 0.6);
+  border-radius: $border-radius;
+  padding: 6rem;
+  // moving the shape by -3rem in the X direction took space from the padding on the left side, so it is being re-added manually by increasing the left side to 9
+  padding-left: 9rem;
+  font-size: $default-font-size;
+  transform: skewX(-12deg);
+
+  @include respond(tab-port) {
+    width: 100%;
+    padding: 4rem;
+    padding-left: 7rem;
+  }
+
+  @include respond(phone) {
+    transform: skewX(0);
+  }
+
+  &__shape {
+    width: 15rem;
+    height: 15rem;
+    // set to float in order for the text to wrap around it
+    float: left;
+
+    // best practice to make space between a floated element and the wrapped texti is to just move the element away instead of setting paddings and margins
+    transform: translateX(-3rem) skewX(12deg);
+
+    // in order to set caption position via apsolute positioning
+    position: relative;
+
+    overflow: hidden;
+    border-radius: 50%;
+
+    @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
+      // define a shape (which may be non-rectangular) around which adjacent inline content should wrap. Element must be set to float, as well as given width and height
+      // radius is 50% (which means the diameter is 100% of the width/height => 15rem) and the center is at 50% width and height
+      -webkit-shape-outside: circle(50% at 50% 50%);
+      shape-outside: circle(50% at 50% 50%);
+      -webkit-clip-path: circle(50% at 50% 50%);
+      clip-path: circle(50% at 50% 50%);
+      border-radius: none;
+    }
+
+    @include respond(phone) {
+      transform: translateX(-3rem) skewX(0);
+    }
+  }
+
+  &__img {
+    height: 100%;
+    transform: translateX(-4rem) scale(1.4);
+    backface-visibility: hidden;
+    transition: all 0.5s;
+  }
+
+  &__text {
+    transform: skewX(12deg);
+
+    @include respond(phone) {
+      transform: skewX(0);
+    }
+  }
+
+  &__caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 20%);
+    color: $color-white;
+    text-transform: uppercase;
+    font-size: 1.7rem;
+    text-align: center;
+    opacity: 0;
+    transition: all 0.5s;
+    // fix jitter glitch when animating
+    backface-visibility: hidden;
+  }
+
+  &:hover &__caption {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  &:hover &__img {
+    transform: translateX(-4rem) scale(1);
+    // brightness value lower than 100% makes it darker, higher makes it brighter
+    filter: blur(3px) brightness(80%);
+  }
+}
